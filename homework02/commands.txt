@@ -1,0 +1,2 @@
+hw2_static
+hw2_dynamic hello

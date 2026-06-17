@@ -1,0 +1,18 @@
+spawn qemu-system-arm -M mps2-an386 -kernel /home/ubuntu/southbound_development/homework02/OHOS_Image -nographic -monitor none
+entering kernel init...
+========================================
+Homework 02 shell register demo
+student id: 2023090041
+static command: hw2_static
+dynamic command: hw2_dynamic [arg]
+========================================
+Entering scheduler
+OHOS # [hw2] static register by static CmdItem ret=0x0
+[hw2] dynamic register ret=0x0
+hw2_static
+[hw2_static] static shell command, student id: 2023090041
+OHOS # hw2_dynamic hello
+[hw2_dynamic] dynamic shell command, student id: 2023090041
+[hw2_dynamic] argc=1
+[hw2_dynamic] first arg=hello
+OHOS # x

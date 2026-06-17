@@ -1,0 +1,18 @@
+spawn qemu-system-arm -M mps2-an386 -kernel /home/ubuntu/southbound_development/homework05/OHOS_Image -nographic -monitor none
+entering kernel init...
+========================================
+Homework 05 queue and semaphore demo
+student id: 2023090041
+shell command: hw5_queue_sem
+========================================
+Entering scheduler
+OHOS # hw5_queue_sem
+[hw5_queue_sem] start queue + semaphore case, student=2023090041
+[hw5_queue_sem] queue create ret=0x0 id=1
+[hw5_queue_sem] sem create ret=0x0 id=0
+OHOS # [hw5_queue_writer] send seq=1 text=queue-message
+[hw5_queue_reader] recv seq=1 text=queue-message student=2023090041
+[hw5_sem_waiter] pend semaphore
+[hw5_sem_poster] post semaphore
+[hw5_sem_waiter] got semaphore student=2023090041
+x

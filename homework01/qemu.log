@@ -1,0 +1,8 @@
+spawn qemu-system-arm -M mps2-an386 -kernel /home/ubuntu/southbound_development/homework01/OHOS_Image -nographic -monitor none
+entering kernel init...
+========================================
+Homework 01 kernel print demo
+hello 2023090041
+========================================
+Entering scheduler
+OHOS # x

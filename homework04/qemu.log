@@ -1,0 +1,21 @@
+spawn qemu-system-arm -M mps2-an386 -kernel /home/ubuntu/southbound_development/homework04/OHOS_Image -nographic -monitor none
+entering kernel init...
+========================================
+Homework 04 event and mutex demo
+student id: 2023090041
+shell command: hw4_event_mutex
+========================================
+Entering scheduler
+OHOS # hw4_event_mutex
+[hw4_event_mutex] start event + mutex case, student=2023090041
+[hw4_event_mutex] event init ret=0x0
+[hw4_event_mutex] mux create ret=0x0 handle=1
+OHOS # [hw4_mutex_worker1] shared=1 student=2023090041
+[hw4_mutex_worker2] shared=2 student=2023090041
+[hw4_mutex_worker1] shared=3 student=2023090041
+[hw4_mutex_worker2] shared=4 student=2023090041
+[hw4_event_writer] write event flag 0x1
+[hw4_event_reader] event=0x1 student=2023090041
+[hw4_mutex_worker1] shared=5 student=2023090041
+[hw4_mutex_worker2] shared=6 student=2023090041
+x

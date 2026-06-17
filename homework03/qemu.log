@@ -1,0 +1,19 @@
+spawn qemu-system-arm -M mps2-an386 -kernel /home/ubuntu/southbound_development/homework03/OHOS_Image -nographic -monitor none
+entering kernel init...
+========================================
+Homework 03 task management demo
+student id: 2023090041
+shell command: hw3_task
+========================================
+Entering scheduler
+OHOS # hw3_task
+[hw3_task] start task management case, run=1, student=2023090041
+[hw3_task] create task A ret=0x0 id=3
+[hw3_task] create task B ret=0x0 id=4
+OHOS # [hw3_task_a] count=1 student=2023090041
+[hw3_task_b] count=1 student=2023090041
+[hw3_task_a] count=2 student=2023090041
+[hw3_task_b] count=2 student=2023090041
+[hw3_task_a] count=3 student=2023090041
+[hw3_task_b] count=3 student=2023090041
+x

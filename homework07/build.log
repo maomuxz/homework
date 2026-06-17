@@ -1,0 +1,11 @@
+[OHOS INFO] [1/1] Regenerating ninja files
+[OHOS INFO] [1/7] gcc cross compiler obj/device/qemu/arm_mps2_an386/test/libdemo.test_demo.o
+[OHOS INFO] [2/7] gcc cross compiler obj/device/qemu/arm_mps2_an386/test/libdemo.homework.o
+[OHOS INFO] [3/7] AR libs/libdemo.a
+[OHOS INFO] [4/7] LINK ./bin/liteos
+[OHOS INFO] [5/7] STAMP obj/build/lite/ohos.stamp
+[OHOS INFO] [6/7] LINK ./bin/OHOS_Image
+[OHOS INFO] [7/7] STAMP obj/build/lite/product.stamp
+[OHOS INFO] /root/openharmony/vendor/ohemu/qemu_mini_system_demo/fs.yml not found, stop packing fs. If the product does not need to be packaged, ignore it.
+[OHOS INFO] qemu_mini_system_demo build success
+[OHOS INFO] cost time: 0:00:00

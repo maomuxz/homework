@@ -1,0 +1,16 @@
+spawn qemu-system-arm -M mps2-an386 -kernel /home/ubuntu/southbound_development/homework06/OHOS_Image -nographic -monitor none
+entering kernel init...
+========================================
+Homework 06 memory management demo
+student id: 2023090041
+shell command: hw6_memory
+========================================
+Entering scheduler
+OHOS # hw6_memory
+[hw6_memory] start dynamic memory case, student=2023090041
+[hw6_memory] LOS_MemInit ret=0x0 pool=0x21011d4c size=4096
+[hw6_memory] alloc word=0x21012108 text=0x2101211c
+[hw6_memory] word=2023090041 text=LiteOS-M dynamic memory works
+[hw6_memory] free word ret=0x0
+[hw6_memory] free text ret=0x0
+OHOS # x

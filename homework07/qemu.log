@@ -1,0 +1,16 @@
+spawn qemu-system-arm -M mps2-an386 -kernel /home/ubuntu/southbound_development/homework07/OHOS_Image -nographic -monitor none
+entering kernel init...
+========================================
+Homework 07 interrupt demo
+student id: 2023090041
+shell command: hw7_interrupt
+========================================
+Entering scheduler
+OHOS # hw7_interrupt
+[hw7_interrupt] start create/trigger/delete case, student=2023090041
+[hw7_interrupt] HalHwiCreate num=7 ret=0x0
+[hw7_interrupt] trigger interrupt in QEMU mini demo path
+[hw7_irq_handler] interrupt handled count=1 student=2023090041
+[hw7_interrupt] HalHwiDelete num=7 ret=0x0
+[hw7_interrupt] final handled count=1
+OHOS # x

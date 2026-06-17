@@ -1,0 +1,25 @@
+spawn qemu-system-arm -M mps2-an386 -kernel /home/ubuntu/southbound_development/homework08/OHOS_Image -nographic -monitor none
+entering kernel init...
+========================================
+Homework 08 distributed soft bus demo
+student id: 2023090041
+shell command: hw8_softbus
+========================================
+Entering scheduler
+OHOS # hw8_softbus
+[hw8_softbus] start distributed soft bus manual case, student=2023090041
+[hw8_softbus] current QEMU mini product has no linked dsoftbus service; this demo follows manual flow.
+[hw8_softbus] RegNodeDeviceStateCb ret=0
+[hw8_softbus] JoinLNN addrType=CONNECTION_ADDR_ETH ret=0
+[hw8_softbus] OnNodeOnline networkId=qemu-mini-network-2023090041
+[hw8_softbus] CreateSessionServer pkg=com.huawei.communication.demo ret=0
+[hw8_softbus] OpenSession sessionId=1 attr.dataType=BYTES ret=0
+[hw8_softbus] SendBytes sessionId=1 size=2048 ret=0
+[hw8_softbus] SendMessage sessionId=1 size=1 ret=0 data=h
+[hw8_softbus] CloseSession sessionId=1
+[hw8_softbus] RemoveSessionServer ret=0
+[hw8_softbus] OnNodeOffline networkId=qemu-mini-network-2023090041
+[hw8_softbus] LeaveLNN ret=0
+[hw8_softbus] UnregNodeDeviceStateCb ret=0
+[hw8_softbus] softbus flow complete
+OHOS # x

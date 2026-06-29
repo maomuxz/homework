@@ -1,67 +1,111 @@
 #!/usr/bin/env python3
-import struct
+import re
 import sys
-import zlib
 from pathlib import Path
 
-FONT = {
-    ' ': [0,0,0,0,0,0,0],
-}
+from PIL import Image, ImageDraw, ImageFont
 
-def glyph(ch):
-    if ch in FONT:
-        return FONT[ch]
-    o = ord(ch)
-    rows = []
-    for y in range(7):
-        row = 0
-        for x in range(5):
-            bit = (o >> ((x + y) % 8)) & 1
-            if bit or x in (0, 4) or y in (0, 6):
-                row |= 1 << (4 - x)
-        rows.append(row)
-    return rows
 
-def chunk(kind, data):
-    return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data) & 0xffffffff)
+FONT_CANDIDATES = [
+    "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+    "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
+    "C:/Windows/Fonts/msyh.ttc",
+    "C:/Windows/Fonts/consola.ttf",
+]
 
-def save_png(path, width, height, pixels):
-    raw = bytearray()
-    for y in range(height):
-        raw.append(0)
-        raw.extend(pixels[y * width * 3:(y + 1) * width * 3])
-    data = b"\x89PNG\r\n\x1a\n"
-    data += chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0))
-    data += chunk(b"IDAT", zlib.compress(bytes(raw), 9))
-    data += chunk(b"IEND", b"")
-    Path(path).write_bytes(data)
+ANSI_RE = re.compile(r"\x1b\[[0-9;?]*[A-Za-z]")
+CONTROL_RE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
 
-def draw_text(pixels, width, x, y, text, color):
-    for ch in text:
-        rows = glyph(ch if ord(ch) < 128 else '?')
-        for yy, row in enumerate(rows):
-            for xx in range(5):
-                if row & (1 << (4 - xx)):
-                    px = x + xx
-                    py = y + yy
-                    if 0 <= px < width and py >= 0:
-                        idx = (py * width + px) * 3
-                        if idx + 2 < len(pixels):
-                            pixels[idx:idx + 3] = bytes(color)
-        x += 6
+
+def load_font(size):
+    for candidate in FONT_CANDIDATES:
+        path = Path(candidate)
+        if path.exists():
+            return ImageFont.truetype(str(path), size)
+    return ImageFont.load_default()
+
+
+def clean_line(line):
+    line = ANSI_RE.sub("", line.replace("\r", ""))
+    line = CONTROL_RE.sub("", line)
+    return line.rstrip()
+
+
+def wrap_line(draw, line, font, max_width):
+    if not line:
+        return [""]
+
+    chunks = []
+    current = ""
+    for ch in line:
+        candidate = current + ch
+        if draw.textbbox((0, 0), candidate, font=font)[2] <= max_width:
+            current = candidate
+        else:
+            if current:
+                chunks.append(current)
+            current = ch
+    if current:
+        chunks.append(current)
+    return chunks
+
 
 def main():
+    if len(sys.argv) != 3:
+        print("usage: text_to_png.py input.log output.png", file=sys.stderr)
+        return 2
+
     src = Path(sys.argv[1])
     dst = Path(sys.argv[2])
-    lines = src.read_text(errors="replace").splitlines()
-    lines = ["Southbound homework QEMU output"] + lines[:90]
-    width = 1100
-    height = max(240, 24 + len(lines) * 12)
-    pixels = bytearray([245, 247, 250] * width * height)
-    for i, line in enumerate(lines):
-        clean = ''.join(ch if 32 <= ord(ch) < 127 else '?' for ch in line)
-        draw_text(pixels, width, 16, 16 + i * 12, clean[:170], (20, 30, 40))
-    save_png(dst, width, height, pixels)
+
+    title_font = load_font(24)
+    body_font = load_font(18)
+    meta_font = load_font(15)
+
+    raw_lines = src.read_text(encoding="utf-8", errors="replace").splitlines()
+    content_lines = [clean_line(line) for line in raw_lines]
+    content_lines = [line for line in content_lines if line or len(content_lines) <= 1]
+
+    width = 1400
+    margin_x = 36
+    margin_y = 28
+    line_gap = 8
+
+    probe = Image.new("RGB", (width, 100), "white")
+    draw = ImageDraw.Draw(probe)
+    max_text_width = width - margin_x * 2
+
+    rendered = []
+    for line in content_lines[:120]:
+        rendered.extend(wrap_line(draw, line, body_font, max_text_width))
+
+    if not rendered:
+        rendered = ["No QEMU output captured."]
+
+    title = "Southbound Homework QEMU Output"
+    meta = f"source: {src}"
+    title_h = title_font.getbbox(title)[3] - title_font.getbbox(title)[1]
+    meta_h = meta_font.getbbox(meta)[3] - meta_font.getbbox(meta)[1]
+    line_h = body_font.getbbox("Ag")[3] - body_font.getbbox("Ag")[1] + line_gap
+    height = max(320, margin_y * 2 + title_h + 14 + meta_h + 24 + line_h * len(rendered))
+
+    image = Image.new("RGB", (width, height), (247, 249, 252))
+    draw = ImageDraw.Draw(image)
+
+    draw.rectangle((0, 0, width, 86), fill=(31, 41, 55))
+    draw.text((margin_x, 22), title, font=title_font, fill=(255, 255, 255))
+    draw.text((margin_x, 58), meta, font=meta_font, fill=(209, 213, 219))
+
+    y = 112
+    for line in rendered:
+        draw.text((margin_x, y), line, font=body_font, fill=(17, 24, 39))
+        y += line_h
+
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    image.save(dst)
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
